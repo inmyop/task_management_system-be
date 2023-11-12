@@ -1,0 +1,45 @@
+version: '3.3'
+
+services:
+  app:
+    image: task_management_system-be:v1
+    container_name: app
+    restart: unless-stopped
+    tty: true
+    env_file: .env
+    ports:
+      - "8000:80"
+    volumes:
+      - ./storage:/var/www/html/storage/app/public
+    depends_on:
+      - db
+    networks:
+      - task-management-system
+    entrypoint: /var/www/html/init.sh
+
+  db:
+    image: mysql:5.7.22
+    container_name: db
+    restart: unless-stopped
+    tty: true
+    environment:
+      MYSQL_DATABASE: task_management_system
+      TZ: Asia/Jakarta
+      MYSQL_USER: elbicnivni
+      MYSQL_PASSWORD: secure-pass123
+      MYSQL_ROOT_PASSWORD: secure-pass123
+    ports:
+      - "3307:3306"
+    command: ['mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci','--default-time-zone=+07:00']
+    volumes:
+      - app-data:/var/lib/mysql
+    networks:
+      - task-management-system
+
+#Docker Networks
+networks:
+  task-management-system:
+    driver: bridge
+
+volumes:
+  app-data:
