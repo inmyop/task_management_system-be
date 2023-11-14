@@ -38,11 +38,22 @@ class TaskController extends ApiController
             $data['status'] = $request->status;
             $data['deadline'] = $request->deadline . ' 23:59';;
 
-            if ($request->hasFile('document')) {
-                $file = $request->file('document');
-                $filePath = uploadFile($file, $userCode);
-                $data['document'] = $filePath;
-            }
+            $decodedFile = base64_decode($data['document']);
+            $mime = finfo_buffer(finfo_open(), $decodedFile, FILEINFO_MIME_TYPE);
+            $extensions = [
+                'application/pdf' => 'pdf',
+                'image/jpeg' => 'jpeg',
+                'image/jpg' => 'jpg',
+                'image/png' => 'png',
+                'text/plain' => 'txt',
+                'text/csv' => 'csv',
+                'video/mp4' => 'mp4',
+            ];
+
+            $extension = $extensions[$mime] ?? null;
+
+            $filePath = uploadFile($decodedFile, $userCode, $extension);
+            $data['document'] = $filePath;
 
             $created = Task::create($data);
             
@@ -141,11 +152,28 @@ class TaskController extends ApiController
             $data['status'] = $request->status;
             $data['deadline'] = $request->deadline;
 
-            if ($request->hasFile('file')) {
-                $file = $request->file('file');
-                $filePath = uploadFile($file, $userCode);
-                $data['document'] = $filePath;
-            }
+            $decodedFile = base64_decode($data['document']);
+            $mime = finfo_buffer(finfo_open(), $decodedFile, FILEINFO_MIME_TYPE);
+            $extensions = [
+                'application/pdf' => 'pdf',
+                'image/jpeg' => 'jpeg',
+                'image/jpg' => 'jpg',
+                'image/png' => 'png',
+                'text/plain' => 'txt',
+                'text/csv' => 'csv',
+                'video/mp4' => 'mp4',
+            ];
+
+            $extension = $extensions[$mime] ?? null;
+
+            $filePath = uploadFile($decodedFile, $userCode, $extension);
+            $data['document'] = $filePath;
+            
+            // if ($request->hasFile('document')) {
+            //     $file = $request->file('document');
+            //     $filePath = uploadFile($file, $userCode);
+            //     $data['document'] = $filePath;
+            // }
 
             $updated = Task::where('task_code', $request->task_code)->update($data);
 

@@ -16,12 +16,12 @@ WORKDIR /var/www/html
 # Copy configuration
 COPY . /var/www/html
 
+
 COPY apache-config.conf /etc/apache2/sites-available/000-default.conf
 
 # Run Command
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
-RUN chmod +x /var/www/html/init.sh
 
 EXPOSE 80
 

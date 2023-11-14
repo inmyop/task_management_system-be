@@ -15,7 +15,16 @@ services:
       - db
     networks:
       - task-management-system
-    entrypoint: /var/www/html/init.sh
+
+  app-fe:
+    image: task_management_system-fe:v1
+    container_name: app-fe
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "3000:80"
+    networks:
+      - task-management-system
 
   db:
     image: mysql:5.7.22

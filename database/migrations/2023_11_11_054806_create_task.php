@@ -20,7 +20,7 @@ return new class extends Migration
             $table->text('description');
             $table->tinyInteger('status')->default(0);
             $table->dateTime('deadline');
-            $table->string('document');
+            $table->string('document')->nullable();
             $table->string('users_code');
             $table->tinyInteger('is_delete')->default(0);
             $table->timestamps();
